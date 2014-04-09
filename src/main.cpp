@@ -3,34 +3,43 @@
 
 #include "LuaScript.h"
 
-int main() {
-    LuaScript script("src/lua/Player.lua");
-    float posX = script.get<float>("player.position.x");
-    float posY = script.get<float>("player.position.y");
-    std::string filename = script.get<std::string>("player.filename");
+using std::string;
+using std::vector;
+using std::endl;
+using std::cout;
+
+#define UNUSED(x) ((void)(x))
+
+int main(int argc, char **argv) {
+    UNUSED(argc);
+    UNUSED(argv);
+
+    LuaScript script("lua/Player.lua");
+
+    double posX = script.get<double>("player.position.x");
+    double posY = script.get<double>("player.position.y");
+    string filename = script.get<string>("player.filename");
     int hp = script.get<int>("player.HP");
 
-    std::cout<<"Position X = "<<posX<<", Y = "<<posY<<std::endl;
-    std::cout<<"Filename:"<<filename<<std::endl;
-    std::cout<<"HP:"<<hp<<std::endl;
+    cout<< "Position X = " << posX << ", Y = " << posY << endl;
+    cout<< "Filename:" << filename << endl;
+    cout<< "HP:" << hp << endl;
 
     // getting arrays
-    std::vector<int> v = script.getIntVector("array");
-    std::cout<<"Contents of array:";
-    for(std::vector<int>::iterator it = v.begin();
-            it != v.end();
-            it++) {
-            std::cout<<*it<<",";
+    vector<int> v = script.getIntVector("array");
+    cout << "Contents of array:";
+    for(vector<int>::iterator it = v.begin(); it != v.end(); it++) {
+            cout << *it << ",";
     }
-    std::cout<<std::endl;
+    cout << endl;
 
     // getting table keys:
-    std::vector<std::string> keys = script.getTableKeys("player");
-    std::cout<<"Keys of [player] table:";
-    for(std::vector<std::string>::iterator it = keys.begin();
-            it != keys.end();
-            it++) {
-            std::cout<<*it<<",";
+    vector<string> keys = script.getTableKeys("player");
+    cout << "Keys of [player] table:";
+    for(vector<string>::iterator it = keys.begin(); it != keys.end(); it++) {
+            cout << *it << ",";
     }
-    std::cout<<std::endl;
+    cout << endl;
+
+    return 0;
 }
