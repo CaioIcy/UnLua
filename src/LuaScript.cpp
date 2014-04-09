@@ -3,19 +3,23 @@
 LuaScript::LuaScript(const std::string& filename) {
     L = luaL_newstate();
     if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0)) {
-        std::cout<<"Error: failed to load ("<<filename<<")"<<std::endl;
-		L = 0;
+        std::cout<< "Error: failed to load ("<<filename<<")" <<std::endl;
+        L = 0;
     }
 
-    if(L) luaL_openlibs(L);
+    if(L){
+        luaL_openlibs(L);
+    }
 }
 
 LuaScript::~LuaScript() {
-	if(L) lua_close(L);
+    if(L){
+        lua_close(L);
+    }
 }
 
 void LuaScript::printError(const std::string& variableName, const std::string& reason) {
-	std::cout<<"Error: can't get ["<<variableName<<"]. "<<reason<<std::endl;
+    std::cout<< "Error: can't get [" <<variableName<< "]. " << reason <<std::endl;
 }
 
 std::vector<int> LuaScript::getIntVector(const std::string& name) {
@@ -42,16 +46,18 @@ std::vector<std::string> LuaScript::getTableKeys(const std::string& name) {
         "    end "
         "return s "
         "end"; // function for getting table keys
-    luaL_loadstring(L, 
-        code.c_str()); // execute code
+
+    luaL_loadstring(L, code.c_str()); // execute code
     lua_pcall(L,0,0,0);
     lua_getglobal(L, "getKeys"); // get function
     lua_pushstring(L, name.c_str());
     lua_pcall(L, 1 , 1, 0); // execute function
+
     std::string test = lua_tostring(L, -1);
     std::vector<std::string> strings;
     std::string temp = "";
-    std::cout<<"TEMP:"<<test<<std::endl;
+    std::cout<< "TEMP:" << test <<std::endl;
+
     for(unsigned int i = 0; i < test.size(); i++) {     
         if(test.at(i) != ',') {
             temp += test.at(i);
